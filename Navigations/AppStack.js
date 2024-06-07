@@ -13,8 +13,8 @@ const AppStack = () => {
       <Stack.Screen options={{headerTransparent: false,
           headerTitle: () => (
             <View style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
-              <Text style={{ fontSize: 18 }}>
-                Carwash
+              <Text style={{ fontSize: 20,margin:10 }}>
+                Get Car Wash Details
               </Text>
             </View>
           ),
