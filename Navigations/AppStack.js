@@ -14,7 +14,7 @@ const AppStack = () => {
       <Stack.Screen options={{headerTransparent: false,
           headerTitle: () => (
             <View style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
-              <Text style={{ fontSize: 20,margin:10 }}>
+              <Text style={{ fontSize: 20,margin:10 ,color:"white"}}>
                 Get Car Wash Details
               </Text>
             </View>
@@ -32,8 +32,8 @@ const AppStack = () => {
       <Stack.Screen options={{headerTransparent: false,
           headerTitle: () => (
             <View style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
-              <Text style={{ fontSize: 20,margin:10 }}>
-                Get Car Wash Details
+              <Text style={{ fontSize: 20,margin:10 ,color:"white"}}>
+                Generate Ticket
               </Text>
             </View>
           ),
@@ -45,7 +45,9 @@ const AppStack = () => {
           headerTitleStyle: {
             fontSize: 15,
             color: '#333',
-          },}} name="GenerateTicket" component={GenerateTicket} />
+          },
+          headerLeft: () => null,}} name="GenerateTicket" component={GenerateTicket}
+           />
     </Stack.Navigator>
   );
 };

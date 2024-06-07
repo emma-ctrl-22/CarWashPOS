@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TextInput ,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
 
 export default function WashDetails() {
   const [selectedService, setSelectedService] = useState('');
@@ -9,20 +10,51 @@ export default function WashDetails() {
   const [carNumber, setCarNumber] = useState('');
   const navigation = useNavigation();
 
-  const handleTicket = () => {
-    navigation.navigate('GenerateTicket', {
-      carNumber: carNumber,
-      selectedService: selectedService,
-      selectedCarType: selectedCarType,
-    });
-  }
+  const generateRandomId = () => {
+    return 'TID' + Math.floor(Math.random() * 1000000);
+  };
+
+  const getCurrentTime = () => {
+    return new Date().toLocaleString();
+  };
+
+  const getPrice = (service) => {
+    switch (service) {
+      case 'wash':
+        return 500;
+      case 'wax':
+        return 300;
+      case 'interior_cleaning':
+        return 700;
+      default:
+        return 0;
+    }
+  };
+
+  const handleTicket = async () => {
+    const ticketId = generateRandomId();
+    const startTime = getCurrentTime();
+    const price = getPrice(selectedService);
+
+    const ticket = {
+      ticketId,
+      startTime,
+      carNumber,
+      selectedService,
+      selectedCarType,
+      price,
+    };
+    console.log(ticket);
+
+    navigation.navigate('GenerateTicket', { ticket });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTxt}>Fill The Form Below</Text>
       <View style={styles.inputGroup}>
         <Text>Car Number</Text>
-        <TextInput placeholder="Enter Car Number" onChangeText={(text)=>setCarNumber(text)} style={styles.TextInput} />
+        <TextInput placeholder="Enter Car Number" onChangeText={(text) => setCarNumber(text)} style={styles.TextInput} />
       </View>
       <View style={styles.inputGroup}>
         <Text>Service Type</Text>
@@ -69,7 +101,7 @@ export default function WashDetails() {
       </View>
 
       <TouchableOpacity style={styles.Btn} onPress={handleTicket}>
-        <Text style={{color:"white"}}>Next</Text>
+        <Text style={{ color: 'white' }}>Next</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -113,14 +145,14 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
   },
-  Btn:{
-    width:"95%",
-    height:60,
-    backgroundColor:"#2328a0",
-    alignItems:"center",
-    justifyContent:"center",
-    alignSelf:"center",
-    marginTop:"5%",
-    borderRadius:5
-  }
+  Btn: {
+    width: '95%',
+    height: 60,
+    backgroundColor: '#2328a0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: '5%',
+    borderRadius: 5,
+  },
 });
