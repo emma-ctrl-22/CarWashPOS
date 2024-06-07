@@ -76,6 +76,23 @@ export default function GenerateTicket({ route }) {
       >
         <Text style={{ color: "white", textAlign: "center" }}>Proceed To Make Payment</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: "#2328a0",
+          padding: 10,
+          borderRadius: 5,
+          marginTop: 40,
+          width: "95%",
+          height: "8%",
+          alignItems:"center",
+            justifyContent:"center",
+            alignSelf:"center"
+        }}
+        onPress={() => navigation.navigate("Tickets")}
+      >
+        <Text style={{ color: "white", textAlign: "center" }}>Save For Later</Text>
+      </TouchableOpacity>
     </View>
   );
 }
