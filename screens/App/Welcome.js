@@ -17,29 +17,25 @@ export default function Welcome() {
       <View style={styles.actions}>
         <View style={styles.actionRow}>
         <ActionButton
-            text="Summaries"
-            icon="menu"
-            IconComponent={Entypo}
+            text="Tickets"
+           value={40}
             onPress={() => console.log("Summaries pressed")}
           />
           <ActionButton
-            text="Items"
-            icon="circle"
-            IconComponent={FontAwesome}
+            text="Transactions"
+            value={40}
             onPress={() => console.log("Items pressed")}
           />
         </View>
         <View style={styles.actionRow}>
         <ActionButton
-            text="Summaries"
-            icon="menu"
-            IconComponent={Entypo}
+            text="Number of Cars"
+            value={40}
             onPress={() => console.log("Summaries pressed")}
           />
           <ActionButton
-            text="Items"
-            icon="circle"
-            IconComponent={FontAwesome}
+            text="Total Amount"
+            value="$1200"
             onPress={() => console.log("Items pressed")}
           />
         </View>
