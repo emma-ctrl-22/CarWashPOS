@@ -9,7 +9,7 @@ import { useState } from 'react';
 export default function Navigations() {
   //const { isLoading, userToken,userInfo } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [userToken, setUserToken] = useState(null);
+  const [userToken, setUserToken] = useState(true);
   const [userInfo, setUserInfo] = useState({
     username: "Emmanuel",
     email:"emmanuelnyatepe35@gmail.com"
