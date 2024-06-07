@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput ,TouchableOpacity} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 export default function WashDetails() {
@@ -56,6 +56,10 @@ export default function WashDetails() {
           </Picker>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.Btn} onPress={()=>navigation.navigate('carInput')}>
+        <Text style={styles.newPaymentText}>Next</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -98,4 +102,14 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
   },
+  Btn:{
+    width:"95%",
+    height:60,
+    backgroundColor:"#2328a0",
+    alignItems:"center",
+    justifyContent:"center",
+    alignSelf:"center",
+    marginTop:"5%",
+    borderRadius:5
+  }
 });
