@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { FontAwesome, Feather, Entypo } from '@expo/vector-icons';
 import ActionButton from './components/ActionButton';
+import TransactionsList from './components/TransactionList';
 
 export default function Welcome() {
   return (
@@ -43,35 +44,10 @@ export default function Welcome() {
           />
         </View>
       </View>
-      <ScrollView style={styles.transactions}>
-        <Text style={styles.sectionTitle}>Last transactions</Text>
-        <View style={styles.transactionItem}>
-          <FontAwesome name="check-square" size={24} color="green" />
-          <View style={styles.transactionDetails}>
-            <Text style={styles.transactionText}>Payment successful</Text>
-            <Text style={styles.transactionSubText}>Cash</Text>
-          </View>
-          <Text style={styles.transactionAmount}>€57.00</Text>
-        </View>
-        <View style={styles.transactionItem}>
-          <FontAwesome name="times-circle" size={24} color="red" />
-          <View style={styles.transactionDetails}>
-            <Text style={styles.transactionText}>Payment failed</Text>
-            <Text style={styles.transactionSubText}>Cash</Text>
-          </View>
-          <Text style={styles.transactionAmount}>€78.00</Text>
-        </View>
-        <View style={styles.transactionItem}>
-          <FontAwesome name="check-square" size={24} color="green" />
-          <View style={styles.transactionDetails}>
-            <Text style={styles.transactionText}>Payment successful</Text>
-            <Text style={styles.transactionSubText}>Cash</Text>
-          </View>
-          <Text style={styles.transactionAmount}>€82.00</Text>
-        </View>
-      </ScrollView>
+      <TransactionsList/>
+      
       <TouchableOpacity style={styles.newPaymentButton}>
-        <Text style={styles.newPaymentText}>New payment</Text>
+        <Text style={styles.newPaymentText}>Add New Ticket</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -81,6 +57,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems:"center"
   },
   header: {
     flexDirection: 'row',
@@ -115,6 +92,8 @@ const styles = StyleSheet.create({
   },
   actions: {
     padding: 10,
+    backgroundColor:"#2328a0",
+    width:"100%"
   },
   actionRow: {
     flexDirection: 'row',
@@ -173,7 +152,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
     alignItems: 'center',
+    width: '70%',
   },
   newPaymentText: {
+    color:"white"
   }
 });
