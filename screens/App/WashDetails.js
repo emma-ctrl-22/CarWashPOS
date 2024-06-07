@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput ,TouchableOpacity} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 
 export default function WashDetails() {
   const [selectedService, setSelectedService] = useState('');
   const [selectedCarType, setSelectedCarType] = useState('');
+  const [carNumber, setCarNumber] = useState('');
+  const navigation = useNavigation();
+
+  const handleTicket = () => {
+    navigation.navigate('GenerateTicket', {
+      carNumber: carNumber,
+      selectedService: selectedService,
+      selectedCarType: selectedCarType,
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTxt}>Fill The Form Below</Text>
       <View style={styles.inputGroup}>
         <Text>Car Number</Text>
-        <TextInput placeholder="Enter Car Number" style={styles.TextInput} />
+        <TextInput placeholder="Enter Car Number" onChangeText={(text)=>setCarNumber(text)} style={styles.TextInput} />
       </View>
       <View style={styles.inputGroup}>
         <Text>Service Type</Text>
@@ -57,8 +68,8 @@ export default function WashDetails() {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.Btn} onPress={()=>navigation.navigate('carInput')}>
-        <Text style={styles.newPaymentText}>Next</Text>
+      <TouchableOpacity style={styles.Btn} onPress={handleTicket}>
+        <Text style={{color:"white"}}>Next</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
