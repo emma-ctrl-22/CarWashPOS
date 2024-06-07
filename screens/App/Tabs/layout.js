@@ -12,10 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
 const AppTabs = () => {
-  const navigation = useNavigation();
-  const navToNotification = () => {
-    navigation.navigate('Notification');
-  };
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -48,7 +44,7 @@ const AppTabs = () => {
         tabBarInactiveTintColor: 'gray',
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: 'absolute',
+
           height: 40,
           borderTopWidth: 0,
           elevation: 0,
