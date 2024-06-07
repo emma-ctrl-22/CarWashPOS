@@ -2,10 +2,10 @@ import React, { useRef, useEffect } from 'react';
 import { TouchableOpacity, View, StyleSheet, Animated ,Text} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Welcome';
-import Reward from '../Payments';
+import Payments from '../Payments';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-import MakePost from '../Tickets';
+import History from '../History';
+import Tickets from '../Tickets';
 import Profile from '../WashDetails';
 import { useNavigation } from '@react-navigation/native';
 
@@ -77,9 +77,9 @@ const AppTabs = () => {
           }
         }}
       />
-      <Tab.Screen name="History" component={MakePost} />
-      <Tab.Screen name="Tickets" component={Reward} />
-      <Tab.Screen name="Transactions" component={Profile} />
+      <Tab.Screen name="History" component={History} />
+      <Tab.Screen name="Tickets" component={Tickets} />
+      <Tab.Screen name="Transactions" component={Payments} />
     </Tab.Navigator>
   );
 };

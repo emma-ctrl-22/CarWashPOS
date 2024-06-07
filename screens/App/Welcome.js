@@ -10,8 +10,10 @@ import {
 import { FontAwesome, Feather, Entypo } from '@expo/vector-icons';
 import ActionButton from './components/ActionButton';
 import TransactionsList from './components/TransactionList';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Welcome() {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.actions}>
@@ -42,7 +44,7 @@ export default function Welcome() {
       </View>
       <TransactionsList/>
       
-      <TouchableOpacity style={styles.newPaymentButton}>
+      <TouchableOpacity style={styles.newPaymentButton} onPress={()=>navigation.navigate('carInput')}>
         <Text style={styles.newPaymentText}>Add New Ticket</Text>
       </TouchableOpacity>
     </SafeAreaView>
