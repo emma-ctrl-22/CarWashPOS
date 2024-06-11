@@ -62,7 +62,7 @@ export default function WashDetails() {
           <Picker
             selectedValue={selectedService}
             onValueChange={(itemValue) => setSelectedService(itemValue)}
-            style={styles.picker}
+            style={styles.servicePicker}
           >
             <Picker.Item label="Select Service" value="" />
             <Picker.Item label="Wash" value="wash" />
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: '70%',
     justifyContent: 'center',
+    marginBottom:"10%"
   },
   picker: {
     height: 40,
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: '5%',
+    marginTop: '45%',
     borderRadius: 5,
   },
 });

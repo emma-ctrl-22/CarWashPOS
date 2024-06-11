@@ -151,9 +151,12 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: 'center',
     width: '80%',
-    height:"10%"
+    height:50,
+    justifyContent:"center"
   },
   newPaymentText: {
-    color:"white"
+    color:"white",
+    fontSize: 20,
+    fontWeight: 'bold',
   }
 });
