@@ -147,10 +147,11 @@ const styles = StyleSheet.create({
   newPaymentButton: {
     backgroundColor: '#4B4ACF',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 5,
     margin: 10,
     alignItems: 'center',
-    width: '70%',
+    width: '80%',
+    height:"10%"
   },
   newPaymentText: {
     color:"white"
