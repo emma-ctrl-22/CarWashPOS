@@ -6,7 +6,9 @@ import axios from 'axios';
 
 export default function WashDetails() {
   const [selectedService, setSelectedService] = useState('');
+  const [selectedServiceId, setSelectedServiceId] = useState('');
   const [selectedCarType, setSelectedCarType] = useState('');
+  const [selectedCarTypeId, setSelectedCarTypeId] = useState('');
   const [carNumber, setCarNumber] = useState('');
   const [services, setServices] = useState([]);
   const [carTypes, setCarTypes] = useState([]);
@@ -43,8 +45,6 @@ export default function WashDetails() {
     fetchCarTypes();
   }, []);
 
- console.log(services.id)
-
   const generateRandomId = () => {
     return 'TID' + Math.floor(Math.random() * 1000000);
   };
@@ -62,7 +62,9 @@ export default function WashDetails() {
       startTime,
       carNumber,
       selectedService,
+      selectedServiceId,
       selectedCarType,
+      selectedCarTypeId,
     };
     console.log(ticket);
 
@@ -81,7 +83,10 @@ export default function WashDetails() {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedService}
-            onValueChange={(itemValue) => setSelectedService(itemValue)}
+            onValueChange={(itemValue, itemIndex) => {
+              setSelectedService(itemValue);
+              setSelectedServiceId(services[itemIndex - 1]?.id || '');
+            }}
             style={styles.servicePicker}
           >
             <Picker.Item label="Select Service" value="" />
@@ -96,7 +101,10 @@ export default function WashDetails() {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedCarType}
-            onValueChange={(itemValue) => setSelectedCarType(itemValue)}
+            onValueChange={(itemValue, itemIndex) => {
+              setSelectedCarType(itemValue);
+              setSelectedCarTypeId(carTypes[itemIndex - 1]?.id || '');
+            }}
             style={styles.picker}
           >
             <Picker.Item label="Select Service Item" value="" />
