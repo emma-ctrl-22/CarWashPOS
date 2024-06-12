@@ -58,7 +58,7 @@ const AppTabs = () => {
           headerTransparent: false,
           headerTitle: () => (
             <View style={{ height: "80%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
-              <Text style={{ fontSize: 18 }}>
+              <Text style={{ fontSize: 20 ,color:"white",fontWeight:"bold"}}>
                 Carwash
               </Text>
             </View>

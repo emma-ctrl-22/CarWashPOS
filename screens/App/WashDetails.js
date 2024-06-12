@@ -1,14 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
 
 export default function WashDetails() {
   const [selectedService, setSelectedService] = useState('');
   const [selectedCarType, setSelectedCarType] = useState('');
   const [carNumber, setCarNumber] = useState('');
+  const [services, setServices] = useState([]);
+  const [carTypes, setCarTypes] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get('https://shaboshabo.wigal.com.gh/api/services');
+        if (response.data.status === 0) {
+          setServices(response.data.message);
+        } else {
+          Alert.alert('Error', 'Failed to fetch services');
+        }
+      } catch (error) {
+        Alert.alert('Error', 'An error occurred while fetching services');
+      }
+    };
+
+    const fetchCarTypes = async () => {
+      try {
+        const response = await axios.get('https://shaboshabo.wigal.com.gh/api/serviceitems');
+        if (response.data.status === 0) {
+          setCarTypes(response.data.message);
+        } else {
+          Alert.alert('Error', 'Failed to fetch car types');
+        }
+      } catch (error) {
+        Alert.alert('Error', 'An error occurred while fetching car types');
+      }
+    };
+
+    fetchServices();
+    fetchCarTypes();
+  }, []);
+
+ console.log(services.id)
 
   const generateRandomId = () => {
     return 'TID' + Math.floor(Math.random() * 1000000);
@@ -18,23 +53,9 @@ export default function WashDetails() {
     return new Date().toLocaleString();
   };
 
-  const getPrice = (service) => {
-    switch (service) {
-      case 'wash':
-        return 500;
-      case 'wax':
-        return 300;
-      case 'interior_cleaning':
-        return 700;
-      default:
-        return 0;
-    }
-  };
-
   const handleTicket = async () => {
     const ticketId = generateRandomId();
     const startTime = getCurrentTime();
-    const price = getPrice(selectedService);
 
     const ticket = {
       ticketId,
@@ -42,7 +63,6 @@ export default function WashDetails() {
       carNumber,
       selectedService,
       selectedCarType,
-      price,
     };
     console.log(ticket);
 
@@ -65,37 +85,24 @@ export default function WashDetails() {
             style={styles.servicePicker}
           >
             <Picker.Item label="Select Service" value="" />
-            <Picker.Item label="Wash" value="wash" />
-            <Picker.Item label="Wax" value="wax" />
-            <Picker.Item label="Interior Cleaning" value="interior_cleaning" />
+            {services.map((service) => (
+              <Picker.Item key={service.id} label={service.service} value={service.service.toLowerCase()} />
+            ))}
           </Picker>
         </View>
       </View>
       <View style={styles.inputGroup}>
-        <Text>Car Type</Text>
+        <Text>Service Item</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedCarType}
             onValueChange={(itemValue) => setSelectedCarType(itemValue)}
             style={styles.picker}
           >
-            <Picker.Item label="Select Car Type" value="" />
-            <Picker.Item label="Sedan" value="sedan" />
-            <Picker.Item label="SUV" value="suv" />
-            <Picker.Item label="Hatchback" value="hatchback" />
-            <Picker.Item label="Convertible" value="convertible" />
-            <Picker.Item label="Coupe" value="coupe" />
-            <Picker.Item label="Wagon" value="wagon" />
-            <Picker.Item label="Minivan" value="minivan" />
-            <Picker.Item label="Pickup Truck" value="pickup_truck" />
-            <Picker.Item label="Sports Car" value="sports_car" />
-            <Picker.Item label="Electric Car" value="electric_car" />
-            <Picker.Item label="Hybrid Car" value="hybrid_car" />
-            <Picker.Item label="Luxury Car" value="luxury_car" />
-            <Picker.Item label="Compact Car" value="compact_car" />
-            <Picker.Item label="Crossover" value="crossover" />
-            <Picker.Item label="Off-Road Vehicle" value="off_road_vehicle" />
-            <Picker.Item label="Van" value="van" />
+            <Picker.Item label="Select Service Item" value="" />
+            {carTypes.map((carType) => (
+              <Picker.Item key={carType.id} label={carType.item_name} value={carType.item_name.toLowerCase()} />
+            ))}
           </Picker>
         </View>
       </View>
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: '70%',
     justifyContent: 'center',
-    marginBottom:"10%"
+    marginBottom: "10%",
   },
   picker: {
     height: 40,
