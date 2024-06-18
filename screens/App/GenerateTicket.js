@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function GenerateTicket({ route }) {
   const { ticket } = route.params;
-  const ticketNumber = ticket.ticketId
+  const ticketNumber = ticket.ticketId;
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -39,6 +39,18 @@ export default function GenerateTicket({ route }) {
     });
   }, [navigation]);
 
+  const saveTicket = async () => {
+    try {
+      const storedTickets = await AsyncStorage.getItem('tickets');
+      let tickets = storedTickets ? JSON.parse(storedTickets) : [];
+      tickets.push(ticket);
+      await AsyncStorage.setItem('tickets', JSON.stringify(tickets));
+      Alert.alert("Success", "Ticket saved for later");
+    } catch (error) {
+      Alert.alert("Error", "Failed to save the ticket");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerTxt}>Generated Ticket</Text>
@@ -62,37 +74,17 @@ export default function GenerateTicket({ route }) {
       </View>
 
       <TouchableOpacity
-        style={{
-          backgroundColor: "#2328a0",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 40,
-          width: "95%",
-          height: "8%",
-          alignItems:"center",
-            justifyContent:"center",
-            alignSelf:"center"
-        }}
+        style={styles.button}
         onPress={() => navigation.navigate("Home")}
       >
-        <Text style={{ color: "white", textAlign: "center" }}>Proceed To Make Payment</Text>
+        <Text style={styles.buttonText}>Proceed To Make Payment</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{
-          backgroundColor: "#2328a0",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 40,
-          width: "95%",
-          height: "8%",
-          alignItems:"center",
-            justifyContent:"center",
-            alignSelf:"center"
-        }}
-        onPress={() => navigation.navigate("Tickets")}
+        style={styles.button}
+        onPress={saveTicket}
       >
-        <Text style={{ color: "white", textAlign: "center" }}>Save For Later</Text>
+        <Text style={styles.buttonText}>Save For Later</Text>
       </TouchableOpacity>
     </View>
   );
@@ -102,10 +94,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-  },
-  text: {
-    fontSize: 18,
-    marginVertical: 10,
   },
   headerTxt: {
     fontSize: 20,
@@ -141,9 +129,25 @@ const styles = StyleSheet.create({
     borderBottomColor: "#c0c0c0",
     height: "25%",
   },
-  text:{
+  text: {
     fontSize: 18,
     marginVertical: 10,
-    fontWeight:"200",margin:10
-  }
+    fontWeight: "200",
+    margin: 10,
+  },
+  button: {
+    backgroundColor: "#2328a0",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 40,
+    width: "95%",
+    height: "8%",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+  },
 });

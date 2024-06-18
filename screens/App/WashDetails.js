@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 export default function WashDetails() {
-  const [selectedService, setSelectedService] = useState('');
+  const [selectedService, setSelectedService] = useState(null);
   const [selectedServiceId, setSelectedServiceId] = useState('');
-  const [selectedCarType, setSelectedCarType] = useState('');
+  const [selectedCarType, setSelectedCarType] = useState(null);
   const [selectedCarTypeId, setSelectedCarTypeId] = useState('');
   const [carNumber, setCarNumber] = useState('');
   const [services, setServices] = useState([]);
   const [carTypes, setCarTypes] = useState([]);
+  const [openServicePicker, setOpenServicePicker] = useState(false);
+  const [openCarTypePicker, setOpenCarTypePicker] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function WashDetails() {
       try {
         const response = await axios.get('https://shaboshabo.wigal.com.gh/api/services');
         if (response.data.status === 0) {
-          setServices(response.data.message);
+          setServices(response.data.message.map(service => ({ label: service.service, value: service.id })));
         } else {
           Alert.alert('Error', 'Failed to fetch services');
         }
@@ -32,7 +34,7 @@ export default function WashDetails() {
       try {
         const response = await axios.get('https://shaboshabo.wigal.com.gh/api/serviceitems');
         if (response.data.status === 0) {
-          setCarTypes(response.data.message);
+          setCarTypes(response.data.message.map(carType => ({ label: carType.item_name, value: carType.id })));
         } else {
           Alert.alert('Error', 'Failed to fetch car types');
         }
@@ -61,12 +63,11 @@ export default function WashDetails() {
       ticketId,
       startTime,
       carNumber,
-      selectedService,
+      selectedService: services.find(service => service.value === selectedService)?.label,
       selectedServiceId,
-      selectedCarType,
+      selectedCarType: carTypes.find(carType => carType.value === selectedCarType)?.label,
       selectedCarTypeId,
     };
-    console.log(ticket);
 
     navigation.navigate('GenerateTicket', { ticket });
   };
@@ -80,39 +81,31 @@ export default function WashDetails() {
       </View>
       <View style={styles.inputGroup}>
         <Text>Service Type</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedService}
-            onValueChange={(itemValue, itemIndex) => {
-              setSelectedService(itemValue);
-              setSelectedServiceId(services[itemIndex - 1]?.id || '');
-            }}
-            style={styles.servicePicker}
-          >
-            <Picker.Item label="Select Service" value="" />
-            {services.map((service) => (
-              <Picker.Item key={service.id} label={service.service} value={service.service.toLowerCase()} />
-            ))}
-          </Picker>
-        </View>
+        <DropDownPicker
+          open={openServicePicker}
+          value={selectedService}
+          items={services}
+          setOpen={setOpenServicePicker}
+          setValue={setSelectedService}
+          setItems={setServices}
+          onChangeValue={(value) => setSelectedServiceId(value)}
+          placeholder="Select Service"
+          style={styles.picker}
+        />
       </View>
       <View style={styles.inputGroup}>
         <Text>Service Item</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCarType}
-            onValueChange={(itemValue, itemIndex) => {
-              setSelectedCarType(itemValue);
-              setSelectedCarTypeId(carTypes[itemIndex - 1]?.id || '');
-            }}
-            style={styles.picker}
-          >
-            <Picker.Item label="Select Service Item" value="" />
-            {carTypes.map((carType) => (
-              <Picker.Item key={carType.id} label={carType.item_name} value={carType.item_name.toLowerCase()} />
-            ))}
-          </Picker>
-        </View>
+        <DropDownPicker
+          open={openCarTypePicker}
+          value={selectedCarType}
+          items={carTypes}
+          setOpen={setOpenCarTypePicker}
+          setValue={setSelectedCarType}
+          setItems={setCarTypes}
+          onChangeValue={(value) => setSelectedCarTypeId(value)}
+          placeholder="Select Service Item"
+          style={styles.picker}
+        />
       </View>
 
       <TouchableOpacity style={styles.Btn} onPress={handleTicket}>
@@ -149,17 +142,12 @@ const styles = StyleSheet.create({
     height: '70%',
     paddingHorizontal: 10,
   },
-  pickerContainer: {
+  picker: {
     borderWidth: 1,
     borderColor: '#c0c0c0',
     borderRadius: 5,
-    height: '70%',
-    justifyContent: 'center',
-    marginBottom: "10%",
-  },
-  picker: {
-    height: 40,
-    width: '100%',
+    height: 50,
+    marginTop: 5,
   },
   Btn: {
     width: '95%',
