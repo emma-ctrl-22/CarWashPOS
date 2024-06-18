@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  BackHandler,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, BackHandler, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -15,37 +8,14 @@ export default function GenerateTicket({ route }) {
   const ticketNumber = ticket.ticketId;
   const navigation = useNavigation();
 
-  useEffect(() => {
-    // Disable hardware back button on Android
-    const backAction = () => {
-      Alert.alert("Hold on!", "You can't go back from this screen.", [
-        { text: "OK", onPress: () => null },
-      ]);
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
-
-  useEffect(() => {
-    // Disable the back button in the header
-    navigation.setOptions({
-      headerLeft: () => null,
-    });
-  }, [navigation]);
-
   const saveTicket = async () => {
     try {
       const storedTickets = await AsyncStorage.getItem('tickets');
       let tickets = storedTickets ? JSON.parse(storedTickets) : [];
-      tickets.push(ticket);
+      tickets.push({ ...ticket, processed: false });
       await AsyncStorage.setItem('tickets', JSON.stringify(tickets));
       Alert.alert("Success", "Ticket saved for later");
+      navigation.navigate('Tickets')
     } catch (error) {
       Alert.alert("Error", "Failed to save the ticket");
     }

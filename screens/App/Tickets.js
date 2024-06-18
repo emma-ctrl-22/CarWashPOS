@@ -19,6 +19,7 @@ export default function Tickets() {
 
     loadTickets();
   }, []);
+  console.log(tickets)
 
   const renderItem = ({ item }) => (
     <View style={styles.ticket}>
