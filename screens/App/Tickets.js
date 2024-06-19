@@ -1,37 +1,48 @@
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons'; // Importing icons from expo vector icons
 
 export default function Tickets() {
   const [tickets, setTickets] = useState([]);
 
-  useEffect(() => {
-    const loadTickets = async () => {
-      try {
-        const storedTickets = await AsyncStorage.getItem('tickets');
-        if (storedTickets) {
-          setTickets(JSON.parse(storedTickets));
-        }
-      } catch (error) {
-        console.error("Failed to load tickets from storage", error);
+  const loadTickets = async () => {
+    try {
+      const storedTickets = await AsyncStorage.getItem('tickets');
+      if (storedTickets) {
+        setTickets(JSON.parse(storedTickets));
       }
-    };
+    } catch (error) {
+      console.error("Failed to load tickets from storage", error);
+    }
+  };
 
-    loadTickets();
-  }, []);
-  console.log(tickets)
+  useFocusEffect(
+    useCallback(() => {
+      loadTickets();
+    }, [])
+  );
 
   const renderItem = ({ item }) => (
     <View style={styles.ticket}>
-      <Text style={styles.text}>Ticket Number: {item.ticketId}</Text>
-      <Text style={styles.text}>Start Time: {item.startTime}</Text>
-      <Text style={styles.text}>Price: {item.price}</Text>
+      <View style={styles.iconContainer}>
+        {item.processed ? (
+          <MaterialIcons name="check-circle" size={24} color="green" />
+        ) : (
+          <MaterialIcons name="cancel" size={24} color="red" />
+        )}
+      </View>
+      <View style={styles.ticketInfo}>
+        <Text style={styles.text}>Ticket Number: {item.ticketId}</Text>
+        <Text style={styles.text}>Start Time: {item.startTime}</Text>
+        <Text style={styles.text}>Price: {item.price}</Text>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTxt}>Saved Tickets</Text>
       {tickets.length > 0 ? (
         <FlatList
           data={tickets}
@@ -51,19 +62,24 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
   },
-  headerTxt: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
   ticket: {
-    padding: 20,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#f9f9f9',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#e3e5fe',
+    marginBottom: 8,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 1,
+  },
+  iconContainer: {
+    marginRight: 10,
+  },
+  ticketInfo: {
+    flex: 1,
   },
   text: {
     fontSize: 18,
