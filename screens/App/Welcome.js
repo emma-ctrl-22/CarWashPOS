@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState,useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,17 +11,35 @@ import { FontAwesome, Feather, Entypo } from '@expo/vector-icons';
 import ActionButton from './components/ActionButton';
 import TransactionsList from './components/TransactionList';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Welcome() {
   const navigation = useNavigation();
+  const [ticketCount, setTicketCount] = useState(0);
+
+  useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        const storedTickets = await AsyncStorage.getItem('tickets');
+        if (storedTickets) {
+          const tickets = JSON.parse(storedTickets);
+          setTicketCount(tickets.length);
+        }
+      } catch (error) {
+        console.error("Failed to load tickets from storage", error);
+      }
+    };
+
+    loadTickets();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.actions}>
         <View style={styles.actionRow}>
         <ActionButton
             text="Tickets"
-           value={40}
-            onPress={() => console.log("Summaries pressed")}
+           value={ticketCount}
+            onPress={() => navigation.navigate('Tickets')}
           />
           <ActionButton
             text="Transactions"
@@ -156,7 +174,7 @@ const styles = StyleSheet.create({
   },
   newPaymentText: {
     color:"white",
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   }
 });

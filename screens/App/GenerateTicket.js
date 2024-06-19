@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Text, View, BackHandler, Alert, TouchableOpacity } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export default function GenerateTicket({ route }) {
   const { ticket } = route.params;
@@ -10,13 +10,22 @@ export default function GenerateTicket({ route }) {
 
   const saveTicket = async () => {
     try {
-      const storedTickets = await AsyncStorage.getItem('tickets');
-      let tickets = storedTickets ? JSON.parse(storedTickets) : [];
-      tickets.push({ ...ticket, processed: false });
-      await AsyncStorage.setItem('tickets', JSON.stringify(tickets));
-      Alert.alert("Success", "Ticket saved for later");
-      navigation.navigate('Tickets')
+      const response = await axios.post("http://shaboshabo.wigal.com.gh/api/servicerequest", {
+        staff_id: "3",
+        car_number: ticket.carNumber,
+        service_id: ticket.serviceId,
+        serviceitem_id: ticket.serviceItemId,
+        price: ticket.price,
+      });
+
+      if (response.status === 200) {
+        Alert.alert("Success", "Ticket saved for later");
+        navigation.navigate('Tickets');
+      } else {
+        Alert.alert("Error", "Failed to save the ticket in try block");
+      }
     } catch (error) {
+      console.error("Failed to save ticket:", error);
       Alert.alert("Error", "Failed to save the ticket");
     }
   };
