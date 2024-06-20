@@ -11,39 +11,16 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-// import {UserIcon,LockClosedIcon } from 'react-native-heroicons/outline'
 import { useNavigation } from "@react-navigation/native";
-// import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
-  //const { login } = useContext(AuthContext);
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    {
-      /*const userData = {
-      email,
-      password
-    }
-    console.log(userData);
-    axios.post("http://172.20.10.5:5000/api/auth/login",userData)
-    .then(res=>
-      {
-        if(res.data.message == "token sent successful"){
-          console.log(res.data);
-          AsyncStorage.setItem('token',res.data.token);
-          navigation.navigate('homescreen');
-        }
-      })*/
-    }
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.logoContainer}>
-        {/* <Image source={require('../Images/EcoHaul.png')} style={styles.imageStyle}/> */}
         <Text style={styles.logoText}>
           Welcome back kindly sign in to access {"\n"}your account.
         </Text>
@@ -51,7 +28,6 @@ const Login = () => {
       <View style={styles.formContainer}>
 <Text style={{textAlign:"left",marginLeft:"8%",marginTop:"3%",marginBottom:"3%"}}>Email</Text>        
         <View style={styles.inputGroup}>
-          {/* <UserIcon color="black" size={20} style={styles.sideIcon}/> */}
           <TextInput
             value={email}
             placeholder="Enter username"
@@ -61,7 +37,6 @@ const Login = () => {
         </View>
         <Text style={{textAlign:"left",marginLeft:"8%",marginTop:"3%",marginBottom:"3%"}}>Password</Text>
         <View style={styles.inputGroup}>
-          {/* <LockClosedIcon color="black" size={20} style={styles.sideIcon}/> */}
           <TextInput
             placeholder="Enter password"
             value={password}
@@ -73,9 +48,6 @@ const Login = () => {
       <View style={styles.loginGroup}>
         <TouchableOpacity
           style={styles.registerBtn}
-          onPress={() => {
-            login(email, password);
-          }}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Log In</Text>
         </TouchableOpacity>
