@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import { TextInput, Button, List } from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 
@@ -9,16 +9,24 @@ const fakeTicketData = [
   { ticketId: 1, date: '2023-06-19', price: '20' },
   { ticketId: 2, date: '2023-06-18', price: '25' },
   { ticketId: 3, date: '2023-06-17', price: '30' },
+  { ticketId: 4, date: '2023-06-16', price: '33' },
+  { ticketId: 5, date: '2023-06-15', price: '37' },
+  { ticketId: 6, date: '2023-06-20', price: '13' },
+  { ticketId: 7, date: '2023-06-17', price: '24' },
+  { ticketId: 8, date: '2023-06-14', price: '28' },
+  { ticketId: 9, date: '2023-06-13', price: '32' },
+  { ticketId: 10, date: '2023-06-12', price: '35' },
+  { ticketId: 11, date: '2023-06-11', price: '38' }, // Changed ID to 11 for uniqueness
   // Add more fake tickets as needed
 ];
 
 export default function History() {
   const [search, setSearch] = useState('');
-  const [fromDate, setFromDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date('2023-06-01')); // Set a reasonable default
   const [toDate, setToDate] = useState(new Date());
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
-  const [ticketHistory, setTicketHistory] = useState([]);
+  const [ticketHistory, setTicketHistory] = useState(fakeTicketData);
 
   useEffect(() => {
     fetchTicketHistory();
@@ -31,6 +39,8 @@ export default function History() {
       const matchesSearch = search ? ticket.ticketId.toString().includes(search) : true;
       return isWithinDateRange && matchesSearch;
     });
+    console.log('From date:', fromDate)
+    console.log('Filtered tickets:', filteredTickets)
     setTicketHistory(filteredTickets);
   };
 
@@ -45,11 +55,10 @@ export default function History() {
   };
 
   const renderTicket = ({ item }) => (
-    <List.Item
-      title={`Ticket ID: ${item.ticketId}`}
-      description={`Date: ${item.date}, Price: ${item.price}`}
-      left={props => <List.Icon {...props} icon="ticket" />}
-    />
+    <View style={styles.ticketItem}>
+      <Text style={styles.ticketTitle}>Ticket ID: {item.ticketId}</Text>
+      <Text style={styles.ticketDescription}>Date: {item.date}, Price: ${item.price}</Text>
+    </View>
   );
 
   return (
@@ -118,5 +127,19 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 10,
+  },
+  ticketItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    backgroundColor: '#f9f9f9',
+  },
+  ticketTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  ticketDescription: {
+    fontSize: 14,
+    color: '#555',
   },
 });
