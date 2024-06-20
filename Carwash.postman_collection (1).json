@@ -179,6 +179,23 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "service history",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"start_date\": \"QA3512110624\",\n    \"end_date\": \"QA3512110624\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				}
+			},
+			"response": []
 		}
 	]
 }

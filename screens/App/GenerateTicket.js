@@ -10,13 +10,23 @@ export default function GenerateTicket({ route }) {
 
   const saveTicket = async () => {
     try {
-      const response = await axios.post("http://shaboshabo.wigal.com.gh/api/servicerequest", {
-        staff_id: "3",
-        car_number: ticket.carNumber,
-        service_id: ticket.serviceId,
-        serviceitem_id: ticket.serviceItemId,
-        price: ticket.price,
-      });
+      const response = await axios.post(
+        "http://shaboshabo.wigal.com.gh/api/servicerequest",
+        {
+          staff_id: "3",
+          car_number: ticket.carNumber,
+          service_id: ticket.serviceId,
+          serviceitem_id: ticket.serviceItemId,
+          price: ticket.price,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Response:", response.data)
 
       if (response.status === 200) {
         Alert.alert("Success", "Ticket saved for later");
