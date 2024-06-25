@@ -22,10 +22,11 @@ export default function History() {
       const formattedFromDate = moment(fromDate).format('YYYY-MM-DD');
       const formattedToDate = moment(toDate).format('YYYY-MM-DD');
 
-      const response = await axios.post('http://shaboshabo.wigal.com.gh/api/servicehistory', {
+      const response = await axios.post('https://shaboshabo.wigal.com.gh/api/servicehistory', {
         start_date: formattedFromDate,
         end_date: formattedToDate,
       });
+      console.log('Ticket history:', response.data);
 
       const filteredTickets = response.data.filter(ticket => {
         const ticketDate = moment(ticket.date);

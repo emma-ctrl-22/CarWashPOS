@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import axios from "./utils/axios";
+
 
 export default function GenerateTicket({ route }) {
   const { ticket } = route.params;
@@ -14,18 +15,19 @@ export default function GenerateTicket({ route }) {
 
   const navigation = useNavigation();
 
+
   const saveTicket =  async() => {
     console.log(price, serviceId, serviceItemId, carNumber, ticketNumber);
     try {
       console.log("Saving ticket...");
       const response = await axios.post(
-        "http://shaboshabo.wigal.com.gh/api/servicerequest",
+        "/servicerequest",
         {
           "staff_id":"3",
-          "car_number":"GK0-321354-11",
-          "service_id":"3",
-          "serviceitem_id":"2",
-          "price":"24"
+          "car_number":carNumber,
+          "service_id":serviceId,
+          "serviceitem_id":serviceItemId,
+          "price":price
       },
         {
           headers: {
