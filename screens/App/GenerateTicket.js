@@ -6,19 +6,27 @@ import axios from "axios";
 export default function GenerateTicket({ route }) {
   const { ticket } = route.params;
   const ticketNumber = ticket.ticketId;
+  const carNumber = ticket.carNumber;
+  const serviceId = String(ticket.selectedServiceId);
+  const serviceItemId = String(ticket.selectedCarTypeId);
+  const price = String(ticket.price);
+  console.log(price, serviceId, serviceItemId, carNumber, ticketNumber);
+
   const navigation = useNavigation();
 
-  const saveTicket = async () => {
+  const saveTicket =  async() => {
+    console.log(price, serviceId, serviceItemId, carNumber, ticketNumber);
     try {
+      console.log("Saving ticket...");
       const response = await axios.post(
         "http://shaboshabo.wigal.com.gh/api/servicerequest",
         {
-          staff_id: "3",
-          car_number: ticket.carNumber,
-          service_id: ticket.serviceId,
-          serviceitem_id: ticket.serviceItemId,
-          price: ticket.price,
-        },
+          "staff_id":"3",
+          "car_number":"GK0-321354-11",
+          "service_id":"3",
+          "serviceitem_id":"2",
+          "price":"24"
+      },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -26,17 +34,18 @@ export default function GenerateTicket({ route }) {
         }
       );
 
-      console.log("Response:", response.data)
+      console.log("Response:", response);
 
       if (response.status === 200) {
         Alert.alert("Success", "Ticket saved for later");
         navigation.navigate('Tickets');
       } else {
         Alert.alert("Error", "Failed to save the ticket in try block");
+        console.error("Failed to save ticket in try block");
       }
     } catch (error) {
       console.error("Failed to save ticket:", error);
-      Alert.alert("Error", "Failed to save the ticket");
+      Alert.alert("Error", `Failed to save the ticket: ${error.message}`);
     }
   };
 

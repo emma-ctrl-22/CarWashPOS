@@ -3,45 +3,41 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native
 import { TextInput, Button } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-
-// Fake JSON data for ticket history
-const fakeTicketData = [
-  { ticketId: 1, date: '2023-06-19', price: '20' },
-  { ticketId: 2, date: '2023-06-18', price: '25' },
-  { ticketId: 3, date: '2023-06-17', price: '30' },
-  { ticketId: 4, date: '2023-06-16', price: '33' },
-  { ticketId: 5, date: '2023-06-15', price: '37' },
-  { ticketId: 6, date: '2023-06-20', price: '13' },
-  { ticketId: 7, date: '2023-06-17', price: '24' },
-  { ticketId: 8, date: '2023-06-14', price: '28' },
-  { ticketId: 9, date: '2023-06-13', price: '32' },
-  { ticketId: 10, date: '2023-06-12', price: '35' },
-  { ticketId: 11, date: '2023-06-11', price: '38' }, // Changed ID to 11 for uniqueness
-  // Add more fake tickets as needed
-];
+import axios from 'axios';
 
 export default function History() {
   const [search, setSearch] = useState('');
-  const [fromDate, setFromDate] = useState(new Date('2023-06-01')); // Set a reasonable default
+  const [fromDate, setFromDate] = useState(moment().subtract(1, 'days').toDate()); // Yesterday
   const [toDate, setToDate] = useState(new Date());
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
-  const [ticketHistory, setTicketHistory] = useState(fakeTicketData);
+  const [ticketHistory, setTicketHistory] = useState([]);
 
   useEffect(() => {
-    fetchTicketHistory();
+    fetchTicketHistory(fromDate, toDate, search);
   }, []);
 
-  const fetchTicketHistory = (fromDate = new Date(), toDate = new Date(), search = '') => {
-    const filteredTickets = fakeTicketData.filter(ticket => {
-      const ticketDate = moment(ticket.date);
-      const isWithinDateRange = ticketDate.isBetween(moment(fromDate), moment(toDate), undefined, '[]');
-      const matchesSearch = search ? ticket.ticketId.toString().includes(search) : true;
-      return isWithinDateRange && matchesSearch;
-    });
-    console.log('From date:', fromDate)
-    console.log('Filtered tickets:', filteredTickets)
-    setTicketHistory(filteredTickets);
+  const fetchTicketHistory = async (fromDate = new Date(), toDate = new Date(), search = '') => {
+    try {
+      const formattedFromDate = moment(fromDate).format('YYYY-MM-DD');
+      const formattedToDate = moment(toDate).format('YYYY-MM-DD');
+
+      const response = await axios.post('http://shaboshabo.wigal.com.gh/api/servicehistory', {
+        start_date: formattedFromDate,
+        end_date: formattedToDate,
+      });
+
+      const filteredTickets = response.data.filter(ticket => {
+        const ticketDate = moment(ticket.date);
+        const isWithinDateRange = ticketDate.isBetween(moment(fromDate), moment(toDate), undefined, '[]');
+        const matchesSearch = search ? ticket.ticketId.toString().includes(search) : true;
+        return isWithinDateRange && matchesSearch;
+      });
+
+      setTicketHistory(filteredTickets);
+    } catch (error) {
+      console.error('Error fetching ticket history:', error);
+    }
   };
 
   const handleFromDateConfirm = (date) => {
