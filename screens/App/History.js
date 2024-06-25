@@ -26,12 +26,17 @@ export default function History() {
         start_date: formattedFromDate,
         end_date: formattedToDate,
       });
-      console.log('Ticket history:', response.data);
+      
+      // Log the API response to inspect the structure
+      console.log('API Response:', response.data);
 
-      const filteredTickets = response.data.filter(ticket => {
-        const ticketDate = moment(ticket.date);
+      // Access the 'data' property from the response
+      const tickets = response.data.data || [];
+
+      const filteredTickets = tickets.filter(ticket => {
+        const ticketDate = moment(ticket.service_date);
         const isWithinDateRange = ticketDate.isBetween(moment(fromDate), moment(toDate), undefined, '[]');
-        const matchesSearch = search ? ticket.ticketId.toString().includes(search) : true;
+        const matchesSearch = search ? ticket.ticket_number.toString().includes(search) : true;
         return isWithinDateRange && matchesSearch;
       });
 
@@ -53,8 +58,8 @@ export default function History() {
 
   const renderTicket = ({ item }) => (
     <View style={styles.ticketItem}>
-      <Text style={styles.ticketTitle}>Ticket ID: {item.ticketId}</Text>
-      <Text style={styles.ticketDescription}>Date: {item.date}, Price: ${item.price}</Text>
+      <Text style={styles.ticketTitle}>Ticket ID: {item.ticket_number}</Text>
+      <Text style={styles.ticketDescription}>Date: {item.service_date}, Price: ${item.price}</Text>
     </View>
   );
 
@@ -80,7 +85,7 @@ export default function History() {
       <FlatList
         data={ticketHistory}
         renderItem={renderTicket}
-        keyExtractor={item => item.ticketId.toString()}
+        keyExtractor={item => item.ticket_number.toString()}
         style={styles.list}
       />
       <DateTimePickerModal
@@ -88,6 +93,7 @@ export default function History() {
         mode="date"
         onConfirm={handleFromDateConfirm}
         onCancel={() => setFromDatePickerVisibility(false)}
+        style={styles.datePicker}
       />
       <DateTimePickerModal
         isVisible={isToDatePickerVisible}
@@ -121,6 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 5,
     alignItems: 'center',
+    color: '#000',
   },
   list: {
     marginTop: 10,

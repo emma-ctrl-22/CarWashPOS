@@ -18,7 +18,7 @@ axiosServices.interceptors.request.use(
         return Promise.reject(error);
     }
     );
-    export default axiosServices;
+export default axiosServices;
 
 // axiosServices.interceptors.response.use(
 //     (response) => {

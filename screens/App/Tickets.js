@@ -3,9 +3,32 @@ import { StyleSheet, Text, View, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons'; // Importing icons from expo vector icons
+import moment from 'moment';
+import axios from 'axios';
 
 export default function Tickets() {
   const [tickets, setTickets] = useState([]);
+  const [fromDate, setFromDate] = useState(moment().subtract(1, 'days').toDate()); // Yesterday
+  const [toDate, setToDate] = useState(new Date());
+
+  const fetchTicketHistory = async (fromDate = new Date(), toDate = new Date()) => {
+    try {
+      const formattedFromDate = moment(fromDate).format('YYYY-MM-DD');
+      const formattedToDate = moment(toDate).format('YYYY-MM-DD');
+
+      const response = await axios.post('https://shaboshabo.wigal.com.gh/api/servicehistory', {
+        start_date: formattedFromDate,
+        end_date: formattedToDate,
+      });
+
+
+      const tickets = response.data.data || [];
+
+      setTickets(tickets);
+    } catch (error) {
+      console.error('Error fetching ticket history:', error);
+    }
+  };
 
   const loadTickets = async () => {
     try {
@@ -20,23 +43,17 @@ export default function Tickets() {
 
   useFocusEffect(
     useCallback(() => {
-      loadTickets();
+      fetchTicketHistory(fromDate, toDate);
     }, [])
   );
 
   const renderItem = ({ item }) => (
     <View style={styles.ticket}>
-      <View style={styles.iconContainer}>
-        {item.processed ? (
-          <MaterialIcons name="check-circle" size={24} color="green" />
-        ) : (
-          <MaterialIcons name="cancel" size={24} color="red" />
-        )}
-      </View>
       <View style={styles.ticketInfo}>
-        <Text style={styles.text}>Ticket Number: {item.ticketId}</Text>
-        <Text style={styles.text}>Start Time: {item.startTime}</Text>
+        <Text style={styles.text}>Ticket Number: {item.ticket_number}</Text>
+        <Text style={styles.text}>Start Time: {item.start_time}</Text>
         <Text style={styles.text}>Price: {item.price}</Text>
+        <Text style={styles.text}>Car Number: {item.car_number}</Text>
       </View>
     </View>
   );
@@ -47,7 +64,7 @@ export default function Tickets() {
         <FlatList
           data={tickets}
           renderItem={renderItem}
-          keyExtractor={item => item.ticketId.toString()}
+          keyExtractor={item => item.id.toString()}
         />
       ) : (
         <Text style={styles.noTicketsText}>No tickets saved</Text>
