@@ -54,7 +54,7 @@ const AppStack = () => {
           headerTitle: () => (
             <View style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
               <Text style={{ fontSize: 20,margin:10 ,color:"white"}}>
-                Generate Ticket
+               Ticket Details
               </Text>
             </View>
           ),
@@ -67,7 +67,7 @@ const AppStack = () => {
             fontSize: 15,
             color: '#333',
           },
-          headerLeft: () => null,}} name="GenerateTicket" component={TicketDetails}
+          headerLeft: () => null,}} name="TicketDetails" component={TicketDetails}
            />
     </Stack.Navigator>
   );

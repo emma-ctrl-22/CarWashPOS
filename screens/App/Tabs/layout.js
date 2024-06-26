@@ -77,8 +77,52 @@ const AppTabs = () => {
           }
         }}
       />
-      <Tab.Screen name="History" component={History} />
-      <Tab.Screen name="Tickets" component={Tickets} />
+      <Tab.Screen name="History" component={History} 
+      options={{
+        headerTransparent: false,
+        headerTitle: () => (
+          <View style={{ height: "80%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
+            <Text style={{ fontSize: 20 ,color:"white",fontWeight:"bold"}}>
+              History
+            </Text>
+          </View>
+        ),
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#2328a0',
+          height: 80,
+        },
+        headerTitleStyle: {
+          fontSize: 15,
+          color: '#333',
+        },
+        headerRightContainerStyle: {
+          marginLeft: "2%"
+        }
+      }}/>
+      <Tab.Screen name="Tickets" component={Tickets}
+      options={{
+        headerTransparent: false,
+        headerTitle: () => (
+          <View style={{ height: "80%", display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
+            <Text style={{ fontSize: 20 ,color:"white",fontWeight:"bold"}}>
+              Tickets
+            </Text>
+          </View>
+        ),
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#2328a0',
+          height: 80,
+        },
+        headerTitleStyle: {
+          fontSize: 15,
+          color: '#333',
+        },
+        headerRightContainerStyle: {
+          marginLeft: "2%"
+        }
+      }} />
       <Tab.Screen name="Transactions" component={Payments} />
     </Tab.Navigator>
   );

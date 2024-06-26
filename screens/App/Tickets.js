@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons'; // Importing icons from expo vector icons
 import moment from 'moment';
 import axios from 'axios';
@@ -10,6 +9,7 @@ export default function Tickets() {
   const [tickets, setTickets] = useState([]);
   const [fromDate, setFromDate] = useState(moment().subtract(1, 'days').toDate()); // Yesterday
   const [toDate, setToDate] = useState(new Date());
+  const navigation = useNavigation();
 
   const fetchTicketHistory = async (fromDate = new Date(), toDate = new Date()) => {
     try {
@@ -21,23 +21,10 @@ export default function Tickets() {
         end_date: formattedToDate,
       });
 
-
       const tickets = response.data.data || [];
-
       setTickets(tickets);
     } catch (error) {
       console.error('Error fetching ticket history:', error);
-    }
-  };
-
-  const loadTickets = async () => {
-    try {
-      const storedTickets = await AsyncStorage.getItem('tickets');
-      if (storedTickets) {
-        setTickets(JSON.parse(storedTickets));
-      }
-    } catch (error) {
-      console.error("Failed to load tickets from storage", error);
     }
   };
 
@@ -47,15 +34,21 @@ export default function Tickets() {
     }, [])
   );
 
+  const handleTicketPress = (ticket) => {
+    navigation.navigate('TicketDetails', { ticket });
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.ticket}>
-      <View style={styles.ticketInfo}>
-        <Text style={styles.text}>Ticket Number: {item.ticket_number}</Text>
-        <Text style={styles.text}>Start Time: {item.start_time}</Text>
-        <Text style={styles.text}>Price: {item.price}</Text>
-        <Text style={styles.text}>Car Number: {item.car_number}</Text>
+    <TouchableOpacity onPress={() => handleTicketPress(item)}>
+      <View style={styles.ticket}>
+        <View style={styles.ticketInfo}>
+          <Text style={styles.text}>Ticket Number: {item.ticket_number}</Text>
+          <Text style={styles.text}>Start Time: {item.start_time}</Text>
+          <Text style={styles.text}>Price: {item.price}</Text>
+          <Text style={styles.text}>Car Number: {item.car_number}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
