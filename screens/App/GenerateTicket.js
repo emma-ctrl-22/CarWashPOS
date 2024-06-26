@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "./utils/axios";

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity,ScrollView } from "react-native";
 import axios from "axios";
 
 const TicketDetails = ({ route }) => {
@@ -36,8 +36,8 @@ setTicketClosed(true);
         }
       );
       console.log(response.data);
-      setReciept(response.data);
-      console.log(reciept)
+      setReciept(response.data.data);
+      console.log("TheReciept",reciept)
     } catch (error) {
       console.error("Error getting service reciept:", error);
     }
@@ -61,9 +61,12 @@ setTicketClosed(true);
         </TouchableOpacity>}
 
         <View style={styles.recieptContainer}>
-        {reciept && reciept.data && reciept.map((item) => (
-          <Text style={styles.text}>{item.car_number}</Text>
-        ))}
+         {
+         reciept && reciept.map((item,index)=>(
+         <View key={index}>
+         <Text>{item.car_number}</Text>
+         </View>))
+         }
         </View>
     </View>
   );
