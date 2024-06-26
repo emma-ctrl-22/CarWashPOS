@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons'; // Importing icons from expo vector icons
+import { FontAwesome } from '@expo/vector-icons'; // Importing icons from expo vector icons
 import moment from 'moment';
 import axios from 'axios';
 
@@ -41,6 +41,13 @@ export default function Tickets() {
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleTicketPress(item)}>
       <View style={styles.ticket}>
+        <View style={styles.iconContainer}>
+          {item.end_time ? (
+            <FontAwesome name="check" size={24} color="green" />
+          ) : (
+            <FontAwesome name="times" size={24} color="red" />
+          )}
+        </View>
         <View style={styles.ticketInfo}>
           <Text style={styles.text}>Ticket Number: {item.ticket_number}</Text>
           <Text style={styles.text}>Start Time: {item.start_time}</Text>

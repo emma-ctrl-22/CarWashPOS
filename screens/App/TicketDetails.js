@@ -1,11 +1,47 @@
-import React from "react";
+import {useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 
 const TicketDetails = ({ route }) => {
   const ticket = route.params.ticket;
   const ticketNumber = ticket.ticket_number;
+  const end_time = ticket.end_time;
+  const [reciept,setReciept] = useState({});
+  const [ticketClosed, setTicketClosed] = useState(false);
   console.log(ticketNumber)
+  const closeTicket = async () => {
+    try {
+      const response = await axios.post(
+        "https://shaboshabo.wigal.com.gh/api/closeservicerequest",
+        {
+          ticket_number: ticketNumber,
+        }
+      );
+      if (response.data.success) {
+        alert("Ticket closed successfully");
+setTicketClosed(true);
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error closing ticket:", error);
+    }
+  };
+
+  const getServiceReciept = async () => {
+    try {
+      const response = await axios.post(
+        "https://shaboshabo.wigal.com.gh/api/servicerceipt",
+        {
+          ticket_number: ticketNumber,
+        }
+      );
+      console.log(response.data);
+      setReciept(response.data);
+      console.log(reciept)
+    } catch (error) {
+      console.error("Error getting service reciept:", error);
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.ticketContainer}>
@@ -14,12 +50,15 @@ const TicketDetails = ({ route }) => {
         <Text style={styles.text}>Price: {ticket.price}</Text>
         <Text style={styles.text}>Car Number: {ticket.car_number}</Text>
       </View>
-        <TouchableOpacity style={styles.closeBtn}>
+       {!end_time && <TouchableOpacity onPress={closeTicket} style={styles.closeBtn}>
           <Text style={styles.Btntext}>Close Ticket</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
         <TouchableOpacity style={styles.closeBtn}>
           <Text style={styles.Btntext}>Make Transaction</Text>
         </TouchableOpacity>
+        {end_time && <TouchableOpacity onPress={getServiceReciept} style={styles.closeBtn}>
+          <Text style={styles.Btntext}>Get Service Reciept</Text>
+        </TouchableOpacity>}
     </View>
   );
 };
@@ -47,7 +86,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 1,
-    width:"98%"
+    width:"98%",
   },
   closeBtn:{
     backgroundColor: '#2328a0',
@@ -57,9 +96,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
     justifyContent: "center",
+    marginBottom:"5%"
   },
   Btntext:{
     color: "white",
-    fontSize: 18,
+    fontSize: 15,
   }
 });
