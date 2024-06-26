@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import axios from "axios";
 
 const TicketDetails = ({ route }) => {
   const ticket = route.params.ticket;
+  const ticketNumber = ticket.ticket_number;
+  console.log(ticketNumber)
   return (
     <View style={styles.container}>
       <View style={styles.ticketContainer}>
