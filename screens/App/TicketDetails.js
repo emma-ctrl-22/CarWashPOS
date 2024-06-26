@@ -59,6 +59,12 @@ setTicketClosed(true);
         {end_time && <TouchableOpacity onPress={getServiceReciept} style={styles.closeBtn}>
           <Text style={styles.Btntext}>Get Service Reciept</Text>
         </TouchableOpacity>}
+
+        <View style={styles.recieptContainer}>
+        {reciept && reciept.data && reciept.map((item) => (
+          <Text style={styles.text}>{item.car_number}</Text>
+        ))}
+        </View>
     </View>
   );
 };
