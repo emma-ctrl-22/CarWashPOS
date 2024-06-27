@@ -1,42 +1,56 @@
-import {useState,useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
+import { useState,useEffect,useCallback } from 'react';
+import { StyleSheet,Text,View,SafeAreaView,TouchableOpacity,ScrollView } from 'react-native';
 import { FontAwesome, Feather, Entypo } from '@expo/vector-icons';
 import ActionButton from './components/ActionButton';
 import TransactionsList from './components/TransactionList';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
+import axios from 'axios';
 
 export default function Welcome() {
   const navigation = useNavigation();
   const [ticketCount, setTicketCount] = useState(0);
+  const [tickets, setTickets] = useState([]);
+  const [fromDate, setFromDate] = useState(moment().subtract(1, 'days').toDate()); // Yesterday
+  const [toDate, setToDate] = useState(new Date());
+  const [totalAmount,setTotalAmount] = useState(0)
 
-  useEffect(() => {
-    const loadTickets = async () => {
-      try {
-        const storedTickets = await AsyncStorage.getItem('tickets');
-        if (storedTickets) {
-          const tickets = JSON.parse(storedTickets);
-          setTicketCount(tickets.length);
+      const fetchTicketHistory = async (fromDate = new Date(), toDate = new Date()) => {
+        try {
+          const formattedFromDate = moment(fromDate).format('YYYY-MM-DD');
+          const formattedToDate = moment(toDate).format('YYYY-MM-DD');
+
+          const response = await axios.post('https://shaboshabo.wigal.com.gh/api/servicehistory', {
+            start_date: formattedFromDate,
+            end_date: formattedToDate,
+          });
+
+          const tickets = response.data.data || [];
+          setTickets(tickets);
+          const TicketCount = tickets.length;
+          setTicketCount(TicketCount)
+
+          const TotalAmount = tickets.reduce((accumulator,currentObject) =>{
+          const price = parseFloat(currentObject.price)|| 0;
+          return accumulator + price;
+          },0);
+console.log(TotalAmount)
+          setTotalAmount(TotalAmount);
+        } catch (error) {
+          console.error('Error fetching ticket history:', error);
         }
-      } catch (error) {
-        console.error("Failed to load tickets from storage", error);
-      }
-    };
+      };
 
-    loadTickets();
-  }, []);
+      useFocusEffect(
+        useCallback(() => {
+          fetchTicketHistory(fromDate, toDate);
+        }, [])
+      );
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.actions}>
         <View style={styles.actionRow}>
-        <ActionButton
+          <ActionButton
             text="Tickets"
            value={ticketCount}
             onPress={() => navigation.navigate('Tickets')}
@@ -50,12 +64,12 @@ export default function Welcome() {
         <View style={styles.actionRow}>
         <ActionButton
             text="Number of Cars"
-            value={40}
+            value={ticketCount}
             onPress={() => console.log("Summaries pressed")}
           />
           <ActionButton
             text="Total Amount"
-            value="$1200"
+            value={totalAmount}
             onPress={() => console.log("Items pressed")}
           />
         </View>

@@ -1,14 +1,19 @@
-import {useState} from "react";
-import { View, Text, StyleSheet, TouchableOpacity,ScrollView } from "react-native";
+import { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
+import {useNavigation} from '@react-navigation/native'
 
 const TicketDetails = ({ route }) => {
   const ticket = route.params.ticket;
   const ticketNumber = ticket.ticket_number;
   const end_time = ticket.end_time;
-  const [reciept,setReciept] = useState({});
+  const [receipt, setReceipt] = useState(null); // Set initial state to null
   const [ticketClosed, setTicketClosed] = useState(false);
-  console.log(ticketNumber)
+
+  const navigation = useNavigation();
+
+  console.log(ticketNumber);
+
   const closeTicket = async () => {
     try {
       const response = await axios.post(
@@ -19,7 +24,8 @@ const TicketDetails = ({ route }) => {
       );
       if (response.data.success) {
         alert("Ticket closed successfully");
-setTicketClosed(true);
+        setTicketClosed(true);
+        navigation.navigate('Tickets');
       }
       console.log(response.data);
     } catch (error) {
@@ -27,7 +33,12 @@ setTicketClosed(true);
     }
   };
 
-  const getServiceReciept = async () => {
+  if (ticketClosed){
+  navigation.navigate('Tickets');
+  }
+
+  const getServiceReceipt = async () => {
+  console.log("Getting Ticket Reciept");
     try {
       const response = await axios.post(
         "https://shaboshabo.wigal.com.gh/api/servicerceipt",
@@ -36,12 +47,13 @@ setTicketClosed(true);
         }
       );
       console.log(response.data);
-      setReciept(response.data.data);
-      console.log("TheReciept",reciept)
+      setReceipt(response.data.message); // Update state with the receipt data
+      console.log("TheReceipt", receipt);
     } catch (error) {
-      console.error("Error getting service reciept:", error);
+      console.error("Error getting service receipt:", error);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.ticketContainer}>
@@ -50,24 +62,36 @@ setTicketClosed(true);
         <Text style={styles.text}>Price: {ticket.price}</Text>
         <Text style={styles.text}>Car Number: {ticket.car_number}</Text>
       </View>
-       {!end_time && <TouchableOpacity onPress={closeTicket} style={styles.closeBtn}>
+      {!end_time && (
+        <TouchableOpacity onPress={closeTicket} style={styles.closeBtn}>
           <Text style={styles.Btntext}>Close Ticket</Text>
-        </TouchableOpacity>}
-        <TouchableOpacity style={styles.closeBtn}>
-          <Text style={styles.Btntext}>Make Transaction</Text>
         </TouchableOpacity>
-        {end_time && <TouchableOpacity onPress={getServiceReciept} style={styles.closeBtn}>
-          <Text style={styles.Btntext}>Get Service Reciept</Text>
-        </TouchableOpacity>}
-
-        <View style={styles.recieptContainer}>
-         {
-         reciept && reciept.map((item,index)=>(
-         <View key={index}>
-         <Text>{item.car_number}</Text>
-         </View>))
-         }
-        </View>
+      )}
+      <TouchableOpacity style={styles.closeBtn}>
+        <Text style={styles.Btntext}>Make Transaction</Text>
+      </TouchableOpacity>
+      {end_time && (
+        <TouchableOpacity onPress={getServiceReceipt} style={styles.closeBtn}>
+          <Text style={styles.Btntext}>Get Service Receipt</Text>
+        </TouchableOpacity>
+      )}
+      {receipt && (
+        <View style={styles.receiptContainer}>
+                  <Text style={styles.receiptText}>Car Number: {receipt.car_number}</Text>
+                  <Text style={styles.receiptText}>Duration: {receipt.duration}</Text>
+                  <Text style={styles.receiptText}>ID: {receipt.id}</Text>
+                  <Text style={styles.receiptText}>Item Serviced: {receipt["item serviced"]}</Text>
+                  <Text style={styles.receiptText}>Price: {receipt.price}</Text>
+                  <Text style={styles.receiptText}>Service: {receipt.service}</Text>
+                  <Text style={styles.receiptText}>Service Date: {receipt.service_date}</Text>
+                  <Text style={styles.receiptText}>Staff Name: {receipt.staff_name}</Text>
+                  <Text style={styles.receiptText}>Start Time: {receipt.start_time}</Text>
+                  <Text style={styles.receiptText}>Ticket Number: {receipt.ticket_number}</Text>
+                </View>
+      )}
+       {receipt && <TouchableOpacity style={styles.closeBtn}>
+              <Text style={styles.Btntext}>Print Reciept</Text>
+            </TouchableOpacity>}
     </View>
   );
 };
@@ -85,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
   },
-  ticketContainer:{
+  ticketContainer: {
     padding: 16,
     backgroundColor: '#e3e5fe',
     marginBottom: 8,
@@ -95,20 +119,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 1,
-    width:"98%",
+    width: "98%",
   },
-  closeBtn:{
+  closeBtn: {
     backgroundColor: '#2328a0',
     padding: 14,
     borderRadius: 8,
-    width:"98%",
+    width: "98%",
     alignItems: "center",
     marginTop: 10,
     justifyContent: "center",
-    marginBottom:"5%"
+    marginBottom: "5%",
   },
-  Btntext:{
+  Btntext: {
     color: "white",
     fontSize: 15,
-  }
+  },
+  receiptContainer: {
+    padding: 16,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
+    marginTop: 20,
+    width: "98%",
+    alignItems: "center",
+  },
+  receiptText: {
+    fontSize: 16,
+    color: '#333',
+  },
 });

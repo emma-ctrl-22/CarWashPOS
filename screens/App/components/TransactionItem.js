@@ -3,17 +3,17 @@ import { View, Text, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 const TransactionItem = ({ transaction }) => {
-  const icon = transaction.success ? "check-square" : "times-circle";
-  const iconColor = transaction.success ? "green" : "red";
+  const icon = transaction.end_time ? "check-square" : "times-circle";
+  const iconColor = transaction.end_time ? "green" : "red";
 
   return (
     <View style={styles.transactionItem}>
       <FontAwesome name={icon} size={24} color={iconColor} />
       <View style={styles.transactionDetails}>
-        <Text style={styles.transactionText}>{transaction.description}</Text>
-        <Text style={styles.transactionSubText}>{transaction.method}</Text>
+        <Text style={styles.transactionText}>{transaction.ticket_number}</Text>
+        <Text style={styles.transactionSubText}>{transaction.start_time}</Text>
       </View>
-      <Text style={styles.transactionAmount}>€{transaction.amount}</Text>
+      <Text style={styles.transactionAmount}>GHC {transaction.price}</Text>
     </View>
   );
 };
