@@ -36,9 +36,9 @@ const TransactionsList = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Last transactions</Text>
+      <Text style={styles.sectionTitle}>Tickets</Text>
       <FlatList
-        data={tickets}
+        data={tickets.slice().reverse()}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <TransactionItem transaction={item} />}
       />

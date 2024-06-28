@@ -83,7 +83,7 @@ export default function History() {
         Search
       </Button>
       <FlatList
-        data={ticketHistory}
+        data={ticketHistory.slice().reverse()}
         renderItem={renderTicket}
         keyExtractor={item => item.ticket_number.toString()}
         style={styles.list}

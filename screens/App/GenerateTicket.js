@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "./utils/axios";
@@ -60,8 +60,8 @@ export default function GenerateTicket({ route }) {
           <Text>Info</Text>
         </View>
         <View style={styles.tableContent}>
-          <Text style={styles.text}>Ticket Number</Text>
-          <Text style={styles.text}>{ticketNumber}</Text>
+          <Text style={styles.text}>Car Number</Text>
+          <Text style={styles.text}>{carNumber}</Text>
         </View>
         <View style={styles.tableContent}>
           <Text style={styles.text}>Start Time</Text>

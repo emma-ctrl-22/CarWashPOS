@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 const TicketDetails = ({ route }) => {
   const ticket = route.params.ticket;
@@ -22,10 +22,21 @@ const TicketDetails = ({ route }) => {
           ticket_number: ticketNumber,
         }
       );
+      console.log(response);
       if (response.data.success) {
-        alert("Ticket closed successfully");
-        setTicketClosed(true);
-        navigation.navigate('Tickets');
+        Alert.alert(
+          "Success",
+          "Ticket closed successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setTicketClosed(true);
+                navigation.goBack();
+              }
+            }
+          ]
+        );
       }
       console.log(response.data);
     } catch (error) {
@@ -34,11 +45,11 @@ const TicketDetails = ({ route }) => {
   };
 
   if (ticketClosed){
-  navigation.navigate('Tickets');
+    navigation.goBack();
   }
 
   const getServiceReceipt = async () => {
-  console.log("Getting Ticket Reciept");
+    console.log("Getting Ticket Receipt");
     try {
       const response = await axios.post(
         "https://shaboshabo.wigal.com.gh/api/servicerceipt",
@@ -77,21 +88,23 @@ const TicketDetails = ({ route }) => {
       )}
       {receipt && (
         <View style={styles.receiptContainer}>
-                  <Text style={styles.receiptText}>Car Number: {receipt.car_number}</Text>
-                  <Text style={styles.receiptText}>Duration: {receipt.duration}</Text>
-                  <Text style={styles.receiptText}>ID: {receipt.id}</Text>
-                  <Text style={styles.receiptText}>Item Serviced: {receipt["item serviced"]}</Text>
-                  <Text style={styles.receiptText}>Price: {receipt.price}</Text>
-                  <Text style={styles.receiptText}>Service: {receipt.service}</Text>
-                  <Text style={styles.receiptText}>Service Date: {receipt.service_date}</Text>
-                  <Text style={styles.receiptText}>Staff Name: {receipt.staff_name}</Text>
-                  <Text style={styles.receiptText}>Start Time: {receipt.start_time}</Text>
-                  <Text style={styles.receiptText}>Ticket Number: {receipt.ticket_number}</Text>
-                </View>
+          <Text style={styles.receiptText}>Car Number: {receipt.car_number}</Text>
+          <Text style={styles.receiptText}>Duration: {receipt.duration}</Text>
+          <Text style={styles.receiptText}>ID: {receipt.id}</Text>
+          <Text style={styles.receiptText}>Item Serviced: {receipt["item serviced"]}</Text>
+          <Text style={styles.receiptText}>Price: {receipt.price}</Text>
+          <Text style={styles.receiptText}>Service: {receipt.service}</Text>
+          <Text style={styles.receiptText}>Service Date: {receipt.service_date}</Text>
+          <Text style={styles.receiptText}>Staff Name: {receipt.staff_name}</Text>
+          <Text style={styles.receiptText}>Start Time: {receipt.start_time}</Text>
+          <Text style={styles.receiptText}>Ticket Number: {receipt.ticket_number}</Text>
+        </View>
       )}
-       {receipt && <TouchableOpacity style={styles.closeBtn}>
-              <Text style={styles.Btntext}>Print Reciept</Text>
-            </TouchableOpacity>}
+      {receipt && (
+        <TouchableOpacity style={styles.closeBtn}>
+          <Text style={styles.Btntext}>Print Receipt</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

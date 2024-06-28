@@ -62,7 +62,7 @@ export default function Tickets() {
     <View style={styles.container}>
       {tickets.length > 0 ? (
         <FlatList
-          data={tickets}
+          data={tickets.slice().reverse()}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
         />
